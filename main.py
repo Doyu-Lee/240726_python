@@ -4,13 +4,17 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Load the data
-file_path = 'daily_temp (1).csv'
+file_path = 'daily_temp.csv'
 data = pd.read_csv(file_path)
 
 # Clean the data
 data['날짜'] = data['날짜'].str.strip()
 data['날짜'] = pd.to_datetime(data['날짜'], format='%Y-%m-%d')
 data['연도'] = data['날짜'].dt.year
+
+# Remove outliers
+data = data[(data['최저기온(℃)'] > -50) & (data['최저기온(℃)'] < 50)]
+data = data[(data['최고기온(℃)'] > -50) & (data['최고기온(℃)'] < 50)]
 
 # Calculate yearly average minimum and maximum temperatures
 yearly_data = data.groupby('연도').agg({
